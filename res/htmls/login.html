@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/res/element-ui/index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <style>
+    .center{
+      background-color: #fff;
+      border-radius: 20px;
+      width: 300px;
+      height: 350px;
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    @font-face {
+      font-family:TheFont;
+      src:url("/res/other/font.woff2");
+    }
+    .AddFont{
+      font-family:TheFont;
+    }
+    .el-input__inner{
+      font-family:TheFont;
+    }
+  </style>
+  <title>Login - LiteBot</title>
+</head>
+<body>
+<div id="app" class="center AddFont" style="display: none;">
+  <el-collapse-transition>
+    <el-card class="box-card" v-show="show">
+      <div slot="header" class="clearfix">
+        <span>LiteBot</span>
+      </div>
+      <el-input v-model="name" placeholder="Username"></el-input>
+      <div style="height: 10px"></div>
+      <el-input placeholder="Password" v-model="pass" show-password></el-input>
+      <div style="height: 10px"></div>
+      <div style="text-align: right">
+        <el-button type="success" @click="login" icon="el-icon-check" circle></el-button>
+      </div>
+    </el-card>
+  </el-collapse-transition>
+</div>
+</body>
+<script src="/res/vue/vue.js"></script>
+<script src="/res/element-ui/index.js"></script>
+<script src="/res/element-ui/en.js"></script>
+<script>
+  ELEMENT.locale(ELEMENT.lang.en)
+  var message;
+  document.getElementById("app").style="";
+  var vue=new Vue({
+    el: '#app',
+    data: function() {
+      return {
+        show: false,
+        name: "",
+        pass: ""
+      }
+    },
+    methods:{
+      login(){
+        message=this.$message;
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/login?name='+vue.name+"&pass="+vue.pass);
+        xhr.send();
+        xhr.onload = function() {
+          if (xhr.status != 200) {
+            message({message: `Error ${xhr.status}: ${xhr.statusText}`,type: 'error'});
+          } else {
+            try {
+              var json=JSON.parse(xhr.responseText);
+              switch (json.code){
+                case "success":{
+                  vue.show=false;
+                  message({message: "Login Success!",type: 'success'});
+                  document.cookie="token="+json.token;
+                  setTimeout(function (){
+                    location.href="/dashboard"
+                  },700)
+                  break
+                }
+                case "err":{
+                  message({message: json.reason,type: 'error'});
+                  break
+                }
+                default:{
+                  message({message: "Unknown Error",type: 'error'});
+                }
+              }
+            }catch (e){
+              message({message: `Error ${e}`,type: 'error'});
+            }
+          }
+        };
+        xhr.onerror = function() {
+          message({message: "Request failed",type: 'error'});
+        };
+      }
+    }
+  })
+  setTimeout(function (){
+    vue.show=true;
+  },500)
+</script>
+</html>

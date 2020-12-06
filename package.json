@@ -1,0 +1,17 @@
+{
+  "name": "litebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mineflayer": "2.34.0",
+    "moment": "^2.29.1",
+    "os-utils": "0.0.14"
+  }
+}

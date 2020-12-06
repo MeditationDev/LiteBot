@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/res/element-ui/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <style>
+        .center{
+            border-radius: 20px;
+            width: 300px;
+            height: 350px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        @font-face {
+            font-family:TheFont;
+            src:url("/res/other/font.woff2");
+        }
+        .AddFont{
+            font-family:TheFont;
+        }
+    </style>
+    <title>Settings - LiteBot</title>
+</head>
+<body>
+<div id="app" class="AddFont" style="display: none;">
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-link href="/" :underline="false" class="el-menu-item" style="width: 100px;font-size: 20px;text-align: center;">LiteBot</el-link>
+        <el-menu-item index="1"><a href="/dashboard" class="el-link el-link--default">Dashboard</a></el-menu-item>
+        <el-menu-item index="2"><a href="/managebot" class="el-link el-link--default">Manage Bots</a></el-menu-item>
+        <el-menu-item index="3"><a href="/settings" class="el-link el-link--default">Settings</a></el-menu-item>
+    </el-menu>
+    <div style="height: 20px"></div>
+    <div style="padding-left: 20px; padding-right: 20px;">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>Other</span>
+            </div>
+            <el-button type="danger" @click="logout" round>Logout</el-button>
+        </el-card>
+    </div>
+</div>
+</body>
+<script src="/res/vue/vue.js"></script>
+<script src="/res/element-ui/index.js"></script>
+<script src="/res/element-ui/en.js"></script>
+<script>
+    ELEMENT.locale(ELEMENT.lang.en)
+    var vue=new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                activeIndex: '3',
+                user:"",
+                pass:""
+            }
+        },
+        methods:{
+            logout() {
+                this.$confirm('Are You Sure To Logout?', 'Warning', {
+                    confirmButtonText: 'LOGOUT',
+                    cancelButtonText: 'CANCEL',
+                    type: 'warning'
+                }).then(() => {
+                    document.cookie="token=null";
+                    location.href="/"
+                }).catch(() => {});
+            }
+        }
+    })
+    document.getElementById("app").style="";
+</script>
+</html>
